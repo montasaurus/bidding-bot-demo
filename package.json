@@ -2,17 +2,17 @@
   "name": "hello-world-node",
   "version": "1.0.0",
   "description": "Bidding Bot Demo",
+  "license": "MIT",
   "main": "biddingBot.ts",
   "directories": {
     "test": "test"
   },
-  "license": "MIT",
   "scripts": {
-    "create-wallet": "ts-node --project tsconfig.json src/createWallet.ts",
     "bidding-bot": "ts-node --project tsconfig.json biddingBot.ts",
     "build": "tsc -p tsconfig.build.json",
     "check-types": "tsc --noEmit",
     "check-types:incremental": "yarn check-types --incremental",
+    "create-wallet": "ts-node --project tsconfig.json src/createWallet.ts",
     "eslint:check": "NODE_OPTIONS='--max_old_space_size=8192' eslint . --max-warnings 0 --ext .js,.ts",
     "eslint:fix": "yarn eslint:check --fix",
     "lint": "concurrently \"yarn check-types\" \"yarn eslint:check\" \"yarn prettier:check\" \"yarn prettier:package.json:check\"",
