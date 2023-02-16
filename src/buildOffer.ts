@@ -1,9 +1,10 @@
 import { apiClient } from "./apiClient"
+import { getNetwork } from "./network"
 import { getWallet } from "./wallet"
 
-const wethAddress = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6"
+const network = getNetwork()
 const openSeaFeeRecipient = "0x0000a26b00c1F0DF003000390027140000fAa719"
-const zone = "0x00000000e88fe2628ebc5da81d2b3cead633e89e"
+
 const zoneHash =
   "0x0000000000000000000000000000000000000000000000000000000000000000"
 const conduitKey =
@@ -17,8 +18,8 @@ const getOfferer = () => {
 const getOffer = (priceWei: bigint) => {
   return [
     {
-      itemType: "1", // ERC 20
-      token: wethAddress, // WETH
+      itemType: 1, // ERC 20
+      token: network.wethAddress,
       identifierOrCriteria: 0,
       startAmount: priceWei.toString(),
       endAmount: priceWei.toString(),
@@ -31,7 +32,7 @@ const getPlatformFee = (priceWei: bigint) => {
   const fee = (priceWei * feeBasisPoints) / BigInt(10000)
   return {
     itemType: 1, // ERC 20
-    token: wethAddress,
+    token: network.wethAddress,
     identifierOrCriteria: 0,
     startAmount: fee.toString(),
     endAmount: fee.toString(),
@@ -46,7 +47,7 @@ const getCreatorFee = (
   const fee = (priceWei * basisPoints) / BigInt(10000)
   return {
     itemType: 1, // ERC 20
-    token: wethAddress,
+    token: network.wethAddress,
     identifierOrCriteria: 0,
     startAmount: fee.toString(),
     endAmount: fee.toString(),
@@ -127,7 +128,7 @@ export const buildOffer = async (offerSpecification: OfferSpecification) => {
     startTime,
     endTime,
     orderType: 2, // ERC 721 Criteria Order
-    zone,
+    zone: network.zone,
     zoneHash,
     salt: getSalt(),
     conduitKey,

@@ -1,3 +1,4 @@
+import { getNetwork } from "./network"
 import { getWallet } from "./wallet"
 
 const types = {
@@ -114,10 +115,13 @@ const types = {
     },
   ],
 }
+
+const network = getNetwork()
+
 const domain = {
   name: "Seaport",
   version: "1.1",
-  chainId: "5",
+  chainId: network.chainId,
   verifyingContract: "0x00000000006c3852cbEf3e08E8dF289169EdE581",
 }
 

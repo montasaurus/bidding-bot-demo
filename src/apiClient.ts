@@ -1,5 +1,11 @@
 import axios from "axios"
+import { getNetwork } from "./network"
+
+const network = getNetwork()
 
 export const apiClient = axios.create({
-  baseURL: "https://testnets-api.opensea.io/api/",
+  baseURL: network.baseURL,
+  headers: {
+    "X-API-KEY": process.env.API_KEY,
+  },
 })
