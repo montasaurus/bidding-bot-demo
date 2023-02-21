@@ -25,7 +25,7 @@ in `yarn create-wallet`
 
 `API_KEY` - Your OpenSea API key. Get one [here](https://docs.opensea.io/reference/request-an-api-key). This is only required for mainnet.
 
-`NETWORK` - The network you want to use. Either `mainnet` or `testnet`. Use `testnet` for testing, and `mainnet` for real offers.
+`NETWORK` - The network you want to use. Either `mainnet` or `testnets`. Use `testnets` for testing, and `mainnet` for real offers.
 
 ### Create a Wallet
 
