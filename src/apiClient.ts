@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import axiosRetry from "axios-retry"
 import { getNetwork } from "./network"
 
@@ -12,10 +12,10 @@ const client = axios.create({
 })
 
 axiosRetry(client, {
-  retryCondition: (error: any) => {
-    return error.response && error.response.status === 429
+  retryCondition: (error: AxiosError) => {
+    return error.response?.status === 429
   },
-  retryDelay: (retryCount: number, error: any) => {
+  retryDelay: (retryCount: number, error: AxiosError) => {
     if (error.response && error.response.headers["retry-after"]) {
       return parseInt(error.response.headers["retry-after"]) * 1000
     }

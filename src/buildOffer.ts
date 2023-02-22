@@ -45,21 +45,14 @@ const getFee = (
   }
 }
 
-const extractFees = (feesObject: any, priceWei: bigint) => {
+const extractFees = (feesObject: object, priceWei: bigint) => {
   const fees = []
 
-  for (const feeCategory in feesObject) {
-    if (Object.prototype.hasOwnProperty.call(feesObject, feeCategory)) {
-      const category = feesObject[feeCategory]
-
-      for (const address in category) {
-        if (Object.prototype.hasOwnProperty.call(category, address)) {
-          const basisPoints = category[address]
-          const fee = getFee(priceWei, BigInt(basisPoints), address)
-          if (fee) {
-            fees.push(fee)
-          }
-        }
+  for (const [_category, categoryFees] of Object.entries(feesObject)) {
+    for (const [address, basisPoints] of Object.entries(categoryFees)) {
+      const fee = getFee(priceWei, BigInt(basisPoints as number), address)
+      if (fee) {
+        fees.push(fee)
       }
     }
   }
