@@ -27,6 +27,10 @@ in `yarn create-wallet`
 
 `NETWORK` - The network you want to use. Either `mainnet` or `testnets`. Use `testnets` for testing, and `mainnet` for real offers.
 
+`MAINNET_RPC_URL` - The RPC URL for mainnet. This is only required for mainnet. You can get this by signing up with e.g. Alchemy.
+
+`TESTNETS_RPC_URL` - The RPC URL for testnets. This is only required for testnets. You can get this by signing up with e.g. Alchemy.
+
 ### Create a Wallet
 
 Follow the steps from the command below to create a new wallet and add the private key to a `.env` file in this directory.

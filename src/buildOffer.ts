@@ -1,4 +1,5 @@
-import { apiClient } from "./apiClient"
+import { Fees } from "opensea-js/lib/types"
+import { apiClient, sdkClient } from "./apiClient"
 import { getNetwork } from "./network"
 import { getWallet } from "./wallet"
 
@@ -8,6 +9,15 @@ const zoneHash =
   "0x0000000000000000000000000000000000000000000000000000000000000000"
 const conduitKey =
   "0x0000007b02230091a7ed01230072f7006a004d60a8d4e71d599b8104250f0000"
+
+type Consideration = {
+  itemType: number
+  token: string
+  identifierOrCriteria: string | number
+  startAmount: string | number
+  endAmount: string | number
+  recipient: string
+}
 
 const getOfferer = () => {
   const wallet = getWallet()
@@ -30,7 +40,7 @@ const getFee = (
   priceWei: bigint,
   feeBasisPoints: bigint,
   receipient: string,
-) => {
+): Consideration | null => {
   const fee = (priceWei * feeBasisPoints) / BigInt(10000)
   if (fee <= 0) {
     return null
@@ -45,7 +55,7 @@ const getFee = (
   }
 }
 
-const extractFees = (feesObject: object, priceWei: bigint) => {
+const extractFeesApi = (feesObject: object, priceWei: bigint) => {
   const fees = []
 
   for (const [_category, categoryFees] of Object.entries(feesObject)) {
@@ -60,24 +70,43 @@ const extractFees = (feesObject: object, priceWei: bigint) => {
   return fees
 }
 
+const extractFeesSdk = (feesObject: Fees, priceWei: bigint) => {
+  const fees = []
+  const feesToAdd = [...feesObject.openseaFees, ...feesObject.sellerFees]
+
+  for (const [address, basisPoints] of feesToAdd) {
+    const fee = getFee(priceWei, BigInt(basisPoints), address)
+    if (fee) {
+      fees.push(fee)
+    }
+  }
+
+  return fees
+}
+
 const getItemFees = async (
   assetContractAddress: string,
   tokenId: string,
   priceWei: bigint,
 ) => {
-  const response = await apiClient.get(
-    `v1/asset/${assetContractAddress}/${tokenId}`,
-  )
+  const asset = await sdkClient.api.getAsset({
+    tokenAddress: assetContractAddress,
+    tokenId,
+  })
 
-  const feesObject = response.data.collection.fees
-  return extractFees(feesObject, priceWei)
+  const fees = asset.collection.fees
+  if (!fees) {
+    return []
+  }
+
+  return extractFeesSdk(fees, priceWei)
 }
 
 const getCriteriaFees = async (collectionSlug: string, priceWei: bigint) => {
   const response = await apiClient.get(`v1/collection/${collectionSlug}`)
 
   const feesObject = response.data.collection.fees
-  return extractFees(feesObject, priceWei)
+  return extractFeesApi(feesObject, priceWei)
 }
 
 const getCriteriaTokenConsideration = async (
