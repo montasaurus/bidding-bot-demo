@@ -95,10 +95,6 @@ const getItemFees = async (
   })
 
   const fees = asset.collection.fees
-  if (!fees) {
-    return []
-  }
-
   return extractFeesSdk(fees, priceWei)
 }
 
