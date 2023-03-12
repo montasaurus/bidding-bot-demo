@@ -1,6 +1,6 @@
 {
-  "name": "hello-world-node",
-  "version": "1.0.0",
+  "name": "bidding-bot-demo",
+  "version": "1.0.1",
   "description": "Bidding Bot Demo",
   "license": "MIT",
   "main": "biddingBot.ts",
@@ -28,7 +28,7 @@
     "crypto": "^1.0.1",
     "dotenv": "16.0.3",
     "ethers": "^5.7.2",
-    "opensea-js": "^4.0.13"
+    "opensea-js": "^4.0.24"
   },
   "devDependencies": {
     "@types/node": "18.13.0",
