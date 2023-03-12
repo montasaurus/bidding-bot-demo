@@ -2,24 +2,6 @@ import { getNetwork } from "./network"
 import { getWallet } from "./wallet"
 
 const types = {
-  //   EIP712Domain: [
-  //     {
-  //       name: "name",
-  //       type: "string",
-  //     },
-  //     {
-  //       name: "version",
-  //       type: "string",
-  //     },
-  //     {
-  //       name: "chainId",
-  //       type: "uint256",
-  //     },
-  //     {
-  //       name: "verifyingContract",
-  //       type: "address",
-  //     },
-  //   ],
   OrderComponents: [
     {
       name: "offerer",
@@ -120,9 +102,9 @@ const network = getNetwork()
 
 const domain = {
   name: "Seaport",
-  version: "1.1",
+  version: "1.4",
   chainId: network.chainId,
-  verifyingContract: "0x00000000006c3852cbEf3e08E8dF289169EdE581",
+  verifyingContract: "0x00000000000001ad428e4906aE43D8F9852d0dD6",
 }
 
 export const signOffer = async (offer: Record<string, unknown>) => {

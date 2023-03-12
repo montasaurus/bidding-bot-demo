@@ -22,7 +22,7 @@ buildCollectionOffer({
         `Collection offer posted! Order Hash: ${response.order_hash}`,
       ),
     error => {
-      console.error("request failed " + error)
+      console.error("Request failed: " + error)
       console.error(JSON.stringify(error.response.data))
     },
   )
@@ -45,7 +45,7 @@ buildCollectionOffer({
         `Item offer posted! Order Hash: ${response.order.order_hash}`,
       ),
     error => {
-      console.error("request failed " + error)
+      console.error("Request failed: " + error)
       console.error(JSON.stringify(error.response.data))
     },
   )
