@@ -27,9 +27,15 @@ in `yarn create-wallet`
 
 `NETWORK` - The network you want to use. Either `mainnet` or `testnets`. Use `testnets` for testing, and `mainnet` for real offers.
 
-`MAINNET_RPC_URL` - The RPC URL for mainnet. This is only required for mainnet. You can get this by signing up with e.g. Alchemy.
+The following environment variables are network specific, and should be prefixed with `MAINNET_` or `TESTNETS_` depending on the network you're using.
 
-`TESTNETS_RPC_URL` - The RPC URL for testnets. This is only required for testnets. You can get this by signing up with e.g. Alchemy.
+`{network}_RPC_URL` - The RPC URL. You can get this by signing up with e.g. Alchemy.
+
+`{network}_COLLECTION_SLUG` - The slug of the collection you want to make an offer on.
+
+`{network}_ITEM_ASSET_CONTRACT_ADDRESS` - The asset contract address of the item you want to make an offer on.
+
+`{network}_ITEM_TOKEN_IDENTIFIER` - The token identifier of the item you want to make an offer on.
 
 ### Create a Wallet
 

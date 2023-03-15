@@ -5,8 +5,6 @@ import { getWallet } from "./wallet"
 
 const network = getNetwork()
 
-const zoneHash =
-  "0x0000000000000000000000000000000000000000000000000000000000000000"
 const conduitKey =
   "0x0000007b02230091a7ed01230072f7006a004d60a8d4e71d599b8104250f0000"
 
@@ -105,10 +103,7 @@ const getCriteriaFees = async (collectionSlug: string, priceWei: bigint) => {
   return extractFeesApi(feesObject, priceWei)
 }
 
-const getCriteriaTokenConsideration = async (
-  collectionSlug: string,
-  quantity: number,
-) => {
+const getBuildData = async (collectionSlug: string, quantity: number) => {
   const offerer = getOfferer()
   const response = await apiClient.post("v2/offers/build", {
     offerer,
@@ -120,7 +115,7 @@ const getCriteriaTokenConsideration = async (
     },
   })
 
-  return response.data.partialParameters.consideration[0]
+  return response.data.partialParameters
 }
 
 const getItemTokenConsideration = async (
@@ -140,12 +135,12 @@ const getItemTokenConsideration = async (
 }
 
 const getCriteriaConsideration = async (
+  criteriaFees: any,
   collectionSlug: string,
-  quantity: number,
   priceWei: bigint,
 ) => {
   const fees = [
-    await getCriteriaTokenConsideration(collectionSlug, quantity),
+    ...criteriaFees,
     ...(await getCriteriaFees(collectionSlug, priceWei)),
   ]
 
@@ -194,9 +189,10 @@ export const buildCollectionOffer = async (
   const now = BigInt(Math.floor(Date.now() / 1000))
   const startTime = now.toString()
   const endTime = (now + expirationSeconds).toString()
+  const buildData = await getBuildData(collectionSlug, quantity)
   const consideration = await getCriteriaConsideration(
+    buildData.consideration,
     collectionSlug,
-    quantity,
     priceWei,
   )
 
@@ -206,9 +202,9 @@ export const buildCollectionOffer = async (
     consideration,
     startTime,
     endTime,
-    orderType: 0,
-    zone: network.zone,
-    zoneHash,
+    orderType: 2,
+    zone: buildData.zone,
+    zoneHash: buildData.zoneHash,
     salt: getSalt(),
     conduitKey,
     totalOriginalConsiderationItems: consideration.length.toString(),
@@ -246,8 +242,9 @@ export const buildItemOffer = async (
     startTime,
     endTime,
     orderType: 0,
-    zone: network.zone,
-    zoneHash,
+    zone: "0x0000000000000000000000000000000000000000",
+    zoneHash:
+      "0x0000000000000000000000000000000000000000000000000000000000000000",
     salt: getSalt(),
     conduitKey,
     totalOriginalConsiderationItems: consideration.length.toString(),
