@@ -135,7 +135,7 @@ const getItemTokenConsideration = async (
 }
 
 const getCriteriaConsideration = async (
-  criteriaFees: any,
+  criteriaFees: unknown[],
   collectionSlug: string,
   priceWei: bigint,
 ) => {
