@@ -1,4 +1,5 @@
 import { getNetwork } from "./network"
+import { seaportContractAddress, seaportName, seaportVersion } from "./seaport"
 import { getWallet } from "./wallet"
 
 const types = {
@@ -101,10 +102,10 @@ const types = {
 const network = getNetwork()
 
 const domain = {
-  name: "Seaport",
-  version: "1.4",
+  name: seaportName,
+  version: seaportVersion,
   chainId: network.chainId,
-  verifyingContract: "0x00000000000001ad428e4906aE43D8F9852d0dD6",
+  verifyingContract: seaportContractAddress,
 }
 
 export const signOffer = async (offer: Record<string, unknown>) => {

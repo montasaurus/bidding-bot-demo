@@ -45,11 +45,19 @@ Follow the steps from the command below to create a new wallet and add the priva
 yarn create-wallet
 ```
 
-### Make an Offer
+### Make Offers
 
-Adjust the values in `biddingBot.ts` to make an offer on a collection. Then run the following command to make the offer.
+Adjust the values in `biddingBot.ts` to make an offer on a collection and an individual item. Then run the following command to make the offers.
 
 ```sh
 yarn bidding-bot
+```
+
+### Demo Fulfillment
+
+To see how to fulfill an offer, run the following command with the order hash of the offer you want to fulfill (and optionally the address you would fulfill it from). To actually fulfill the offer, check out the `_fulfillTransaction` function in `fulfillOffer.ts`.
+
+```sh
+yarn demo-fulfillment {order_hash} {from_address}
 ```
 

@@ -9,6 +9,7 @@
   },
   "scripts": {
     "bidding-bot": "ts-node --project tsconfig.json biddingBot.ts",
+    "demo-fulfillment": "ts-node --project tsconfig.json demoFulfillment.ts",
     "build": "tsc -p tsconfig.build.json",
     "check-types": "tsc --noEmit",
     "check-types:incremental": "yarn check-types --incremental",
