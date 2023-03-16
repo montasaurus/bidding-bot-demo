@@ -7,20 +7,37 @@ import { getWallet } from "./wallet"
 
 const network = getNetwork()
 
-const getFulfillmentData = async (
-  offerHash: string,
-  fulfillerAddress: string,
-) => {
+type NFT = {
+  assetContractAddress: string
+  tokenId: string
+}
+
+type FulfillmentRequest = {
+  offerHash: string
+  fulfillerAddress: string
+  consideration?: NFT
+}
+
+const getFulfillmentData = async (request: FulfillmentRequest) => {
+  let consideration
+  if (request.consideration) {
+    consideration = {
+      asset_contract_address: request.consideration.assetContractAddress,
+      token_id: request.consideration.tokenId,
+    }
+  }
   const payload = {
     offer: {
-      hash: offerHash,
+      hash: request.offerHash,
       chain: network.chainName,
       protocol_address: seaportContractAddress,
     },
     fulfiller: {
-      address: fulfillerAddress,
+      address: request.fulfillerAddress,
     },
+    consideration,
   }
+
   try {
     const response = await apiClient.post(`v2/offers/fulfillment_data`, payload)
     return response.data.fulfillment_data
@@ -31,17 +48,8 @@ const getFulfillmentData = async (
   }
 }
 
-type FulfillmentRequest = {
-  offerHash: string
-  fulfillerAddress?: string
-}
-
 const buildTransaction = async (request: FulfillmentRequest) => {
-  const fulfillerAddress = request.fulfillerAddress || getWallet().address
-  const fulfillmentData = await getFulfillmentData(
-    request.offerHash,
-    fulfillerAddress,
-  )
+  const fulfillmentData = await getFulfillmentData(request)
   const transactionData = fulfillmentData.transaction
 
   const fragment = seaportInterface.getFunction(transactionData.function)
@@ -51,7 +59,7 @@ const buildTransaction = async (request: FulfillmentRequest) => {
   )
   const tx: ethers.providers.TransactionRequest = {
     to: transactionData.to,
-    from: fulfillerAddress,
+    from: request.fulfillerAddress,
     value: transactionData.value,
     data: encodedData,
   }

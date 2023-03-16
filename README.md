@@ -55,9 +55,10 @@ yarn bidding-bot
 
 ### Demo Fulfillment
 
-To see how to fulfill an offer, run the following command with the order hash of the offer you want to fulfill (and optionally the address you would fulfill it from). To actually fulfill the offer, check out the `_fulfillTransaction` function in `fulfillOffer.ts`.
+To see how to fulfill an offer, run the following command with the order hash of the offer you want to fulfill and the address you would fulfill it from. If you're fulfilling a criteria offer, you also need to pass in the contract address and token ID of the NFT you're trying to fulfill with.
 
 ```sh
-yarn demo-fulfillment {order_hash} {from_address}
+yarn demo-fulfillment {order_hash} {from_address} [{contract_address} {token_id}]
 ```
 
+To actually fulfill the offer, check out the `_fulfillTransaction` function in `fulfillOffer.ts`.
