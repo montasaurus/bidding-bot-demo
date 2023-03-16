@@ -45,11 +45,13 @@ const buildTransaction = async (request: FulfillmentRequest) => {
   const transactionData = fulfillmentData.transaction
 
   const fragment = seaportInterface.getFunction(transactionData.function)
-  const encodedData = seaportInterface.encodeFunctionData(fragment, [
-    transactionData.input_data.parameters,
-  ])
+  const encodedData = seaportInterface.encodeFunctionData(
+    fragment,
+    Object.values(transactionData.input_data),
+  )
   const tx: ethers.providers.TransactionRequest = {
     to: transactionData.to,
+    from: fulfillerAddress,
     value: transactionData.value,
     data: encodedData,
   }
