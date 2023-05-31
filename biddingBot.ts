@@ -10,7 +10,7 @@ async function main() {
   const collectionOffer = await buildCollectionOffer({
     collectionSlug: network.collectionSlug,
     quantity: 1,
-    priceWei: BigInt("3130000000000000"),
+    priceWei: BigInt("3100000000000000"),
     expirationSeconds: BigInt(901),
   })
   const collectionSignature = await signOffer(collectionOffer)
@@ -27,7 +27,7 @@ async function main() {
     assetContractAddress: network.itemAssetContractAddress,
     tokenId: network.itemTokenIdentifier,
     quantity: 1,
-    priceWei: BigInt("3130000000000000"),
+    priceWei: BigInt("3100000000000000"),
     expirationSeconds: BigInt(901),
   })
   const itemSignature = await signOffer(itemOffer)
