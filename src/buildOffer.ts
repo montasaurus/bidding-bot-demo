@@ -1,6 +1,7 @@
 import { Fees } from "opensea-js/lib/types"
 import { apiClient, sdkClient } from "./apiClient"
 import { getNetwork } from "./network"
+import { seaportContractAddress } from "./seaport"
 import { getWallet } from "./wallet"
 
 const network = getNetwork()
@@ -113,6 +114,7 @@ const getBuildData = async (collectionSlug: string, quantity: number) => {
         slug: collectionSlug,
       },
     },
+    protocol_address: seaportContractAddress,
   })
 
   return response.data.partialParameters
