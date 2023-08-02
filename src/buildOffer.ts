@@ -204,7 +204,7 @@ export const buildCollectionOffer = async (
     consideration,
     startTime,
     endTime,
-    orderType: 2,
+    orderType: 0,
     zone: buildData.zone,
     zoneHash: buildData.zoneHash,
     salt: getSalt(),
