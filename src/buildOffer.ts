@@ -1,4 +1,4 @@
-import { Fees } from "opensea-js/lib/types"
+import { Chain, Fees } from "opensea-js/lib/types"
 import { apiClient, sdkClient } from "./apiClient"
 import { getNetwork } from "./network"
 import { seaportContractAddress } from "./seaport"
@@ -88,12 +88,15 @@ const getItemFees = async (
   tokenId: string,
   priceWei: bigint,
 ) => {
-  const asset = await sdkClient.api.getAsset({
-    tokenAddress: assetContractAddress,
+  const response = await sdkClient.api.getNFT(
+    Chain.Mainnet,
+    assetContractAddress,
     tokenId,
-  })
+  )
 
-  const fees = asset.collection.fees
+  const collectionSlug = response.nft.collection
+  const collection = await sdkClient.api.getCollection(collectionSlug)
+  const fees = collection.fees
   return extractFeesSdk(fees, priceWei)
 }
 

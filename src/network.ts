@@ -1,4 +1,4 @@
-import { Network } from "opensea-js"
+import { Chain } from "opensea-js"
 
 const getEnvRequired = (key: string) => {
   const value = process.env[key]
@@ -16,7 +16,7 @@ const networks = {
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     apiKey: getEnvRequired("API_KEY"),
     rpcUrl: getEnvRequired("MAINNET_RPC_URL"),
-    network: Network.Main,
+    network: Chain.Mainnet,
     collectionSlug: getEnvRequired("MAINNET_COLLECTION_SLUG"),
     itemAssetContractAddress: getEnvRequired(
       "MAINNET_ITEM_ASSET_CONTRACT_ADDRESS",
@@ -32,7 +32,7 @@ const networks = {
     rpcUrl:
       process.env.TESTNETS_RPC_URL ||
       "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    network: Network.Goerli,
+    network: Chain.Goerli,
     collectionSlug:
       process.env.TESTNETS_COLLECTION_SLUG || "boredapeyachtclub-ehs3xmkzrw",
     itemAssetContractAddress:

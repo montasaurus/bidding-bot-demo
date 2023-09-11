@@ -29,7 +29,7 @@
     "crypto": "^1.0.1",
     "dotenv": "16.0.3",
     "ethers": "^5.7.2",
-    "opensea-js": "^5.0.0"
+    "opensea-js": "^6.1.9"
   },
   "devDependencies": {
     "@types/node": "18.13.0",

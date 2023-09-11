@@ -1,15 +1,15 @@
 import axios, { AxiosError } from "axios"
 import axiosRetry from "axios-retry"
+import { ethers } from "ethers"
 import { OpenSeaSDK } from "opensea-js"
-import * as Web3 from "web3"
 import { getNetwork } from "./network"
 
 const network = getNetwork()
 
-const provider = new Web3.default.providers.HttpProvider(network.rpcUrl)
+const provider = new ethers.providers.JsonRpcProvider(network.rpcUrl)
 
 export const sdkClient = new OpenSeaSDK(provider, {
-  networkName: network.network,
+  chain: network.network,
   apiKey: network.apiKey,
 })
 
