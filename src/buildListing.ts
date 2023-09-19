@@ -96,14 +96,13 @@ const getItemFees = async (
 const getItemTokenConsideration = async (
   price: bigint,
 ) => {
-  const newPrice = price / BigInt(20) * BigInt(19); // Use 'n' suffix to indicate BigInt literals
   const offerer = getOfferer()
   return {
     itemType: 0,
     token: "0x0000000000000000000000000000000000000000",
     identifierOrCriteria: 0,
-    startAmount: newPrice.toString(),
-    endAmount: newPrice.toString(),
+    startAmount: price.toString(),
+    endAmount: price.toString(),
     recipient: offerer,
   }
 }
@@ -154,10 +153,18 @@ export const buildItemListing = async (
     tokenId,
     priceWei,
   )
-  // TODO we need to update the price for the item: 
-  // subtract the fees from the initial price, as they are set as a % of the initial price
-  // TEMPORARY FIX: subtract 5% = 2.5% (SC creator fee) + 2.5% opensea, but this needs to be checked
-  console.log("... buildItemListing: We apply a temporary fix here for the consideration")
+
+  // update the price for the first fee, which is the amount the seller will receive
+  let priceStartAmount = BigInt(priceWei)
+  for (let i = 1; i < consideration.length; i++) {
+    priceStartAmount = priceStartAmount - BigInt(consideration[i].startAmount)
+  }
+  let priceEndAmount = BigInt(priceWei)
+  for (let i = 1; i < consideration.length; i++) {
+    priceEndAmount = priceEndAmount - BigInt(consideration[i].endAmount)
+  }
+  consideration[0].startAmount = priceStartAmount.toString()
+  consideration[0].endAmount = priceEndAmount.toString()
 
   const offer = {
     offerer: getOfferer(),
