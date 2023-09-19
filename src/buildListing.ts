@@ -1,7 +1,6 @@
-import { Chain, Fees } from "opensea-js/lib/types"
-import { apiClient, sdkClient } from "./apiClient"
+import { Fees } from "opensea-js/lib/types"
+import { sdkClient } from "./apiClient"
 import { getNetwork } from "./network"
-import { seaportContractAddress } from "./seaport"
 import { getWallet } from "./wallet"
 
 const network = getNetwork()
@@ -24,15 +23,13 @@ const getOfferer = () => {
 }
 
 // Create listing item for an offer
-const getOffer = (priceWei: bigint, tokenId: string) => {
+const getOffer = (tokenId: string) => {
   return [
     {
       // itemType: 1, // ERC 20
       itemType: 2, // the offer array must have exactly one item, and it must be an ERC721 or ERC1155 token.
       token: network.itemAssetContractAddress, // nft contract address
       identifierOrCriteria: tokenId,
-      // startAmount: priceWei.toString(),
-      // endAmount: priceWei.toString(),
       startAmount: '1',
       endAmount: '1',
     },
@@ -59,21 +56,6 @@ const getFee = (
   }
 }
 
-// Extract fees from an API response
-const extractFeesApi = (feesObject: object, priceWei: bigint) => {
-  const fees = []
-
-  for (const [_category, categoryFees] of Object.entries(feesObject)) {
-    for (const [address, basisPoints] of Object.entries(categoryFees)) {
-      const fee = getFee(priceWei, BigInt(basisPoints as number), address)
-      if (fee) {
-        fees.push(fee)
-      }
-    }
-  }
-
-  return fees
-}
 
 // Extract fees from an SDK response
 const extractFeesSdk = (feesObject: Fees, priceWei: bigint) => {
@@ -109,39 +91,12 @@ const getItemFees = async (
   return feesUpdated
 }
 
-// Get criteria fees from an API
-const getCriteriaFees = async (collectionSlug: string, priceWei: bigint) => {
-  const response = await apiClient.get(`v1/collection/${collectionSlug}`)
-
-  const feesObject = response.data.collection.fees
-  return extractFeesApi(feesObject, priceWei)
-}
-
-// Get build data for an offer
-const getBuildData = async (collectionSlug: string, quantity: number) => {
-  const offerer = getOfferer()
-  const response = await apiClient.post("v2/offers/build", {
-    offerer,
-    quantity,
-    criteria: {
-      collection: {
-        slug: collectionSlug,
-      },
-    },
-    protocol_address: seaportContractAddress,
-  })
-
-  return response.data.partialParameters
-}
 
 // Get consideration for an item token
 const getItemTokenConsideration = async (
-  assetContractAddress: string,
-  tokenId: string,
   price: bigint,
 ) => {
   const newPrice = price / BigInt(20) * BigInt(19); // Use 'n' suffix to indicate BigInt literals
-  // const newprice = price /20*19
   const offerer = getOfferer()
   return {
     itemType: 0,
@@ -153,18 +108,6 @@ const getItemTokenConsideration = async (
   }
 }
 
-const getCriteriaConsideration = async (
-  criteriaFees: unknown[],
-  collectionSlug: string,
-  priceWei: bigint,
-) => {
-  const fees = [
-    ...criteriaFees,
-    ...(await getCriteriaFees(collectionSlug, priceWei)),
-  ]
-
-  return fees.filter(fee => fee !== null)
-}
 
 const getItemConsideration = async (
   assetContractAddress: string,
@@ -172,7 +115,7 @@ const getItemConsideration = async (
   priceWei: bigint,
 ) => {
   const fees = [
-    await getItemTokenConsideration(assetContractAddress, tokenId, priceWei),
+    await getItemTokenConsideration(priceWei),
     ...(await getItemFees(assetContractAddress, tokenId, priceWei)),
   ]
 
@@ -184,14 +127,6 @@ const getSalt = () => {
   return Math.floor(Math.random() * 100_000).toString()
 }
 
-// Define the structure for a collection offer specification
-type CollectionOfferSpecification = {
-  collectionSlug: string
-  quantity: number
-  priceWei: bigint
-  expirationSeconds: bigint
-}
-
 // Define the structure for an item offer specification
 type ItemOfferSpecification = {
   assetContractAddress: string
@@ -200,6 +135,7 @@ type ItemOfferSpecification = {
   expirationSeconds: bigint
 }
 
+// for more info on the listing structure, see https://docs.opensea.io/reference/create-an-order
 export const buildItemListing = async (
   offerSpecification: ItemOfferSpecification,
 ) => {
@@ -225,7 +161,7 @@ export const buildItemListing = async (
 
   const offer = {
     offerer: getOfferer(),
-    offer: getOffer(priceWei,tokenId),
+    offer: getOffer(tokenId),
     consideration,
     startTime,
     endTime,
