@@ -1,9 +1,12 @@
 import { Chain } from "opensea-js"
 
-const getEnvRequired = (key: string) => {
+// Define a function to retrieve a required environment variable
+const getEnvRequired = (key: string, defaultValue: string = '') => {
   const value = process.env[key]
   if (value === undefined) {
-    throw new Error(`Missing required environment variable: ${key}`)
+    // throw new Error(`Missing required environment variable: ${key}`)
+    console.warn(`Missing environment variable: ${key}. Continuing with default value.`)
+    return defaultValue
   }
   return value
 }
@@ -22,6 +25,20 @@ const networks = {
       "MAINNET_ITEM_ASSET_CONTRACT_ADDRESS",
     ),
     itemTokenIdentifier: getEnvRequired("MAINNET_ITEM_TOKEN_IDENTIFIER"),
+  },
+  polygon: {
+    chainId: 137,
+    chainName: "polygon", 
+    baseURL: "https://api.opensea.io/api/",
+    wethAddress: "???",
+    apiKey: getEnvRequired("API_KEY"),
+    rpcUrl: getEnvRequired("POLYGON_RPC_URL"),
+    network: Chain.Polygon,
+    collectionSlug: getEnvRequired("POLYGON_COLLECTION_SLUG"),
+    itemAssetContractAddress: getEnvRequired(
+      "POLYGON_ITEM_ASSET_CONTRACT_ADDRESS",
+    ),
+    itemTokenIdentifier: getEnvRequired("POLYGON_ITEM_TOKEN_IDENTIFIER"),
   },
   testnets: {
     chainId: 5,
@@ -42,11 +59,14 @@ const networks = {
   },
 }
 
+// Get the network configuration based on the environment variable
 export const getNetwork = () => {
   const network = process.env.NETWORK
   switch (network) {
     case "mainnet":
       return networks.mainnet
+    case "polygon":
+      return networks.polygon
     case "testnets":
       return networks.testnets
     case undefined:

@@ -53,6 +53,14 @@ Adjust the values in `biddingBot.ts` to make an offer on a collection and an ind
 yarn bidding-bot
 ```
 
+### Make Listings
+
+Adjust the values in `listingBot.ts` to make a listing on an individual item. Then run the following command to make the listing.
+
+```sh
+yarn listing-bot
+```
+
 ### Demo Fulfillment
 
 To see how to fulfill an offer, run the following command with the order hash of the offer you want to fulfill and the address you would fulfill it from. If you're fulfilling a criteria offer, you also need to pass in the contract address and token ID of the NFT you're trying to fulfill with.
